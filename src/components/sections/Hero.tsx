@@ -9,13 +9,16 @@ import { TrackBackground } from '../ui/TrackBackground'
 
 type BadgeState = 'green' | 'radio' | 'pit'
 
-export function Hero() {
+export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
   const [raceStarted, setRaceStarted] = useState(false)
   const [badgeState, setBadgeState] = useState<BadgeState>('green')
   const badgeResetTimerRef = useRef<number | null>(null)
   const typedRole = useTypingEffect(typingRoles, 70, 2200)
 
-  const handleLightsComplete = useCallback(() => setRaceStarted(true), [])
+  const handleLightsComplete = useCallback(() => {
+    setRaceStarted(true)
+    onRaceStart?.()
+  }, [onRaceStart])
 
   const triggerPitLaneBadge = useCallback(() => {
     if (badgeResetTimerRef.current) {
@@ -52,7 +55,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-screen items-center overflow-hidden pt-28"
+      className="relative flex min-h-screen items-center overflow-hidden pt-24 sm:pt-28 lg:pt-32"
     >
       {!raceStarted && <LightsOut onComplete={handleLightsComplete} />}
       <TrackBackground />

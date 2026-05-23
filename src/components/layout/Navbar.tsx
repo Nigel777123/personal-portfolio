@@ -27,9 +27,9 @@ export function Navbar() {
         className="glass-hud mx-auto flex max-w-6xl items-center justify-between rounded-sm border-2 border-white/10 px-2.5 py-2 sm:px-5 sm:py-3"
         aria-label="Main navigation"
       >
-        <a href="#home" className="group flex items-center gap-2">
+        <a href="#home" className="group flex shrink-0 items-center gap-2">
           <TrackMapLogo />
-          <span className="hidden font-display text-sm font-bold uppercase tracking-widest text-white sm:inline">
+          <span className="whitespace-nowrap font-display text-[10px] font-bold uppercase tracking-[0.18em] text-white sm:text-sm">
             Race Control
           </span>
         </a>

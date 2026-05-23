@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react'
+import { useState } from 'react'
 import { F1ScrollProvider } from './context/F1ScrollContext'
+import { RaceAtmosphereBackdrop } from './components/layout/RaceAtmosphereBackdrop'
 import { Navbar } from './components/layout/Navbar'
 import { Footer } from './components/layout/Footer'
 import { RpmShiftLights } from './components/hud/RpmShiftLights'
@@ -28,21 +30,26 @@ function SectionFallback() {
 }
 
 export default function App() {
+  const [raceStarted, setRaceStarted] = useState(false)
+
   return (
     <F1ScrollProvider>
-      <RpmShiftLights />
-      <Navbar />
-      <SpeedometerHUD />
-      <main>
-        <Hero />
-        <Suspense fallback={<SectionFallback />}>
-          <About />
-          <Projects />
-          <Experience />
-          <Contact />
-        </Suspense>
-      </main>
-      <Footer />
+      <div className="relative isolate min-h-screen overflow-x-hidden bg-zinc-950">
+        <RaceAtmosphereBackdrop />
+        {raceStarted && <RpmShiftLights />}
+        {raceStarted && <Navbar />}
+        {raceStarted && <SpeedometerHUD />}
+        <main className="relative z-10">
+          <Hero onRaceStart={() => setRaceStarted(true)} />
+          <Suspense fallback={<SectionFallback />}>
+            <About />
+            <Projects />
+            <Experience />
+            <Contact />
+          </Suspense>
+        </main>
+        <Footer />
+      </div>
     </F1ScrollProvider>
   )
 }
