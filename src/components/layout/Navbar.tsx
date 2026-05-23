@@ -1,30 +1,34 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useF1Scroll } from '../../context/F1ScrollContext'
 import { navLinks } from '../../data/navigation'
 import { useActiveSection } from '../../hooks/useActiveSection'
 import { useMotionValueDisplay } from '../../hooks/useMotionValueDisplay'
 import { cn } from '../../utils/cn'
+import { TrackMapLogo } from '../ui/TrackMapLogo'
 
 const sectionIds = navLinks.map((l) => l.id)
 
 export function Navbar() {
-  const activeId = useActiveSection(sectionIds)
+  const observedActiveId = useActiveSection(sectionIds)
+  const [activeId, setActiveId] = useState(observedActiveId)
   const [mobileOpen, setMobileOpen] = useState(false)
   const { speedKmh, gear } = useF1Scroll()
   const speed = useMotionValueDisplay(speedKmh)
 
+  useEffect(() => {
+    setActiveId(observedActiveId)
+  }, [observedActiveId])
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-4">
+    <header className="fixed inset-x-0 top-0 z-50 px-2 pt-[max(env(safe-area-inset-top),0.5rem)] sm:px-6 sm:pt-4">
       <nav
-        className="glass-hud mx-auto flex max-w-6xl items-center justify-between rounded-sm border-2 border-white/10 px-3 py-2 sm:px-5 sm:py-3"
+        className="glass-hud mx-auto flex max-w-6xl items-center justify-between rounded-sm border-2 border-white/10 px-2.5 py-2 sm:px-5 sm:py-3"
         aria-label="Main navigation"
       >
         <a href="#home" className="group flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-sm bg-[#E10600] font-display text-sm font-black text-white transition-transform group-hover:scale-105 f1-red-glow">
-            F1
-          </span>
+          <TrackMapLogo />
           <span className="hidden font-display text-sm font-bold uppercase tracking-widest text-white sm:inline">
             Race Control
           </span>
@@ -47,6 +51,7 @@ export function Navbar() {
               <li key={link.id} className="relative">
                 <a
                   href={link.href}
+                  onClick={() => setActiveId(link.id)}
                   className={cn(
                     'relative z-10 px-3 py-2 font-display text-xs font-bold uppercase tracking-wider transition-colors',
                     isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-200',
@@ -96,7 +101,10 @@ export function Navbar() {
                 <li key={link.id}>
                   <a
                     href={link.href}
-                    onClick={() => setMobileOpen(false)}
+                    onClick={() => {
+                      setActiveId(link.id)
+                      setMobileOpen(false)
+                    }}
                     className={cn(
                       'block rounded-sm px-4 py-3 font-display text-sm font-bold uppercase tracking-wider',
                       activeId === link.id

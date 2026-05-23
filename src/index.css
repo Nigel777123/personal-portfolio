@@ -27,6 +27,7 @@
 
   body {
     @apply bg-neutral-950 font-sans text-zinc-100;
+    overflow-x: hidden;
     background-color: #0a0a0a;
     background-image:
       repeating-linear-gradient(
@@ -45,6 +46,14 @@
       ),
       radial-gradient(ellipse 90% 60% at 50% -10%, rgb(225 6 0 / 0.12), transparent 55%),
       radial-gradient(ellipse 50% 40% at 100% 50%, rgb(212 255 0 / 0.04), transparent);
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
   }
 
   ::selection {
@@ -98,7 +107,7 @@
   }
 
   .section-padding {
-    @apply px-4 py-20 sm:px-6 lg:px-8 lg:py-28;
+    @apply px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28;
   }
 
   .racing-stripe {

@@ -7,6 +7,8 @@ interface MagneticButtonProps {
   children: ReactNode
   href?: string
   onClick?: () => void
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
   variant?: 'primary' | 'secondary' | 'ghost'
   className?: string
   type?: 'button' | 'submit'
@@ -25,12 +27,14 @@ export function MagneticButton({
   children,
   href,
   onClick,
+  onMouseEnter,
+  onMouseLeave,
   variant = 'primary',
   className,
   type = 'button',
   disabled,
 }: MagneticButtonProps) {
-  const { ref, onMouseMove, onMouseLeave } = useMagnetic(0.22)
+  const { ref, onMouseMove, onMouseLeave: onMagneticMouseLeave } = useMagnetic(0.22)
   const classes = cn(
     'inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm transition-shadow duration-300 font-display',
     variants[variant],
@@ -49,9 +53,14 @@ export function MagneticButton({
       <motion.a
         ref={ref as RefObject<HTMLAnchorElement>}
         href={href}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={() => {
+          onMouseLeave?.()
+          onMagneticMouseLeave()
+        }}
         className={classes}
         onMouseMove={onMouseMove}
-        onMouseLeave={onMouseLeave}
         {...motionProps}
       >
         {children}
@@ -64,10 +73,14 @@ export function MagneticButton({
       ref={ref as RefObject<HTMLButtonElement>}
       type={type}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={() => {
+        onMouseLeave?.()
+        onMagneticMouseLeave()
+      }}
       disabled={disabled}
       className={classes}
       onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
       {...motionProps}
     >
       {children}
