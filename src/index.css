@@ -1,48 +1,98 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-surface: #0a0a0f;
-  --color-surface-elevated: #12121a;
-  --color-muted: #94a3b8;
-  --color-accent-start: #8b5cf6;
-  --color-accent-end: #22d3ee;
+  --font-sans: 'Rajdhani', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Orbitron', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --color-f1-red: #e10600;
+  --color-f1-lime: #d4ff00;
+  --color-f1-white: #f5f5f5;
+  --color-carbon: #0a0a0a;
 }
 
 @layer base {
   html {
     @apply scroll-smooth antialiased;
+    scroll-padding-top: 5.5rem;
   }
 
   body {
-    @apply bg-zinc-950 font-sans text-zinc-100;
+    @apply bg-neutral-950 font-sans text-zinc-100;
+    background-color: #0a0a0a;
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgb(139 92 246 / 0.15), transparent),
-      radial-gradient(ellipse 60% 40% at 100% 0%, rgb(34 211 238 / 0.08), transparent);
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 2px,
+        rgb(255 255 255 / 0.015) 2px,
+        rgb(255 255 255 / 0.015) 4px
+      ),
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgb(255 255 255 / 0.01) 2px,
+        rgb(255 255 255 / 0.01) 4px
+      ),
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgb(225 6 0 / 0.12), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 100% 50%, rgb(212 255 0 / 0.04), transparent);
   }
 
   ::selection {
-    @apply bg-violet-500/40 text-white;
+    @apply bg-[#E10600]/50 text-white;
   }
 }
 
 @layer utilities {
-  .gradient-text {
-    @apply bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400 bg-clip-text text-transparent;
+  .font-display {
+    font-family: var(--font-display);
   }
 
-  .gradient-border {
-    background:
-      linear-gradient(var(--color-surface-elevated), var(--color-surface-elevated)) padding-box,
-      linear-gradient(135deg, var(--color-accent-start), var(--color-accent-end)) border-box;
-    border: 2px solid transparent;
+  .font-mono-data {
+    font-family: var(--font-mono);
   }
 
-  .glass {
-    @apply border border-white/10 bg-zinc-900/60 backdrop-blur-xl;
+  .f1-gradient-text {
+    @apply bg-gradient-to-r from-[#E10600] via-white to-[#d4ff00] bg-clip-text text-transparent;
+  }
+
+  .f1-red-glow {
+    box-shadow: 0 0 24px rgb(225 6 0 / 0.45), 0 0 48px rgb(225 6 0 / 0.15);
+  }
+
+  .f1-tire-glow {
+    box-shadow:
+      0 0 0 1px rgb(212 255 0 / 0.35),
+      0 0 28px rgb(212 255 0 / 0.2),
+      inset 0 0 20px rgb(225 6 0 / 0.08);
+  }
+
+  .glass-hud {
+    @apply border border-white/10 bg-neutral-950/85 backdrop-blur-xl;
+  }
+
+  .glass-pit {
+    @apply border border-white/10 bg-neutral-900/70 backdrop-blur-md;
+  }
+
+  .checkered-active {
+    background-image: linear-gradient(45deg, #111 25%, transparent 25%),
+      linear-gradient(-45deg, #111 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #111 75%),
+      linear-gradient(-45deg, transparent 75%, #111 75%);
+    background-size: 8px 8px;
+    background-position:
+      0 0,
+      0 4px,
+      4px -4px,
+      -4px 0;
   }
 
   .section-padding {
     @apply px-4 py-20 sm:px-6 lg:px-8 lg:py-28;
+  }
+
+  .racing-stripe {
+    @apply h-1 w-full bg-gradient-to-r from-[#E10600] via-[#d4ff00] to-white;
   }
 }

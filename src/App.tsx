@@ -1,6 +1,9 @@
 import { lazy, Suspense } from 'react'
+import { F1ScrollProvider } from './context/F1ScrollContext'
 import { Navbar } from './components/layout/Navbar'
 import { Footer } from './components/layout/Footer'
+import { RpmShiftLights } from './components/hud/RpmShiftLights'
+import { SpeedometerHUD } from './components/hud/SpeedometerHUD'
 import { Hero } from './components/sections/Hero'
 
 const About = lazy(() =>
@@ -17,13 +20,19 @@ const Contact = lazy(() =>
 )
 
 function SectionFallback() {
-  return <div className="section-padding mx-auto max-w-6xl animate-pulse h-64 rounded-2xl bg-white/5" />
+  return (
+    <div className="section-padding mx-auto max-w-6xl">
+      <div className="h-64 animate-pulse rounded-sm border border-white/10 bg-neutral-900/50" />
+    </div>
+  )
 }
 
 export default function App() {
   return (
-    <>
+    <F1ScrollProvider>
+      <RpmShiftLights />
       <Navbar />
+      <SpeedometerHUD />
       <main>
         <Hero />
         <Suspense fallback={<SectionFallback />}>
@@ -34,6 +43,6 @@ export default function App() {
         </Suspense>
       </main>
       <Footer />
-    </>
+    </F1ScrollProvider>
   )
 }
