@@ -15,12 +15,13 @@ export function SectionHeading({ eyebrow, title, subtitle }: SectionHeadingProps
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.5 }}
     >
-      <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-cyan-400/90">
-        {eyebrow}
+      <p className="mb-3 font-mono-data text-xs font-semibold uppercase tracking-[0.3em] text-[#d4ff00]">
+        // {eyebrow}
       </p>
-      <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
+      <h2 className="font-display text-3xl font-extrabold uppercase tracking-wider text-white sm:text-4xl lg:text-5xl">
         {title}
       </h2>
+      <div className="mt-4 h-1 w-24 bg-gradient-to-r from-[#E10600] to-[#d4ff00]" />
       {subtitle && (
         <p className="mt-4 text-base leading-relaxed text-zinc-400 sm:text-lg">{subtitle}</p>
       )}

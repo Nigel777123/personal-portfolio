@@ -6,6 +6,7 @@ export const experience: ExperienceItem[] = [
     role: 'Senior Frontend Engineer',
     company: 'Lumina Labs',
     period: '2023 — Present',
+    lap: 'Lap 42',
     summary: 'Lead UI architecture for a B2B SaaS platform serving 50k+ users.',
     details: [
       'Shipped a design-system migration that cut UI debt by 40% and improved Lighthouse scores.',
@@ -18,6 +19,7 @@ export const experience: ExperienceItem[] = [
     role: 'Frontend Developer',
     company: 'Pixel & Co.',
     period: '2021 — 2023',
+    lap: 'Lap 28',
     summary: 'Built marketing sites and product dashboards for agency clients.',
     details: [
       'Delivered 12+ responsive launches with Framer Motion micro-interactions and CMS integrations.',
@@ -30,6 +32,7 @@ export const experience: ExperienceItem[] = [
     role: 'Junior Web Developer',
     company: 'Startline Studio',
     period: '2019 — 2021',
+    lap: 'Lap 12',
     summary: 'First role shipping production React apps and learning modern CSS.',
     details: [
       'Converted legacy jQuery pages to React SPAs with improved Core Web Vitals.',

@@ -15,10 +15,10 @@ interface MagneticButtonProps {
 
 const variants = {
   primary:
-    'bg-gradient-to-r from-violet-600 to-cyan-500 text-white shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40',
+    'bg-[#E10600] text-white uppercase tracking-widest font-bold shadow-lg shadow-[#E10600]/40 hover:shadow-[#E10600]/60 border border-[#ff3333]/50',
   secondary:
-    'border border-white/20 bg-white/5 text-white hover:border-cyan-400/50 hover:bg-white/10',
-  ghost: 'text-zinc-300 hover:text-white hover:bg-white/5',
+    'border-2 border-white/30 bg-neutral-900/80 text-white uppercase tracking-wider hover:checkered-active hover:border-[#d4ff00]/60',
+  ghost: 'text-zinc-400 hover:text-[#d4ff00] uppercase tracking-wider',
 }
 
 export function MagneticButton({
@@ -30,18 +30,18 @@ export function MagneticButton({
   type = 'button',
   disabled,
 }: MagneticButtonProps) {
-  const { ref, onMouseMove, onMouseLeave } = useMagnetic(0.28)
+  const { ref, onMouseMove, onMouseLeave } = useMagnetic(0.22)
   const classes = cn(
-    'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-shadow duration-300',
+    'inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm transition-shadow duration-300 font-display',
     variants[variant],
     disabled && 'pointer-events-none opacity-50',
     className,
   )
 
   const motionProps = {
-    whileHover: { scale: 1.03 },
-    whileTap: { scale: 0.98 },
-    transition: { type: 'spring' as const, stiffness: 400, damping: 20 },
+    whileHover: { scale: 1.04 },
+    whileTap: { scale: 0.97 },
+    transition: { type: 'spring' as const, stiffness: 500, damping: 22 },
   }
 
   if (href) {

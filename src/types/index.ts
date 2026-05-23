@@ -9,11 +9,14 @@ export interface Project {
   tech: string[]
   liveUrl: string
   githubUrl: string
+  /** Telemetry-style performance score 0–100 */
+  performance: number
 }
 
 export interface Skill {
   name: string
   level: number
+  unit?: string
 }
 
 export interface ExperienceItem {
@@ -23,12 +26,14 @@ export interface ExperienceItem {
   period: string
   summary: string
   details: string[]
+  lap: string
 }
 
 export interface NavLink {
   id: string
   label: string
   href: string
+  gear?: number
 }
 
 export interface SocialLink {
