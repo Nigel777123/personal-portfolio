@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { navLinks } from '../../data/navigation'
@@ -13,52 +13,52 @@ export function Navbar() {
   const [activeId, setActiveId] = useState(observedActiveId)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [hasScrolled, setHasScrolled] = useState(false)
-  const [ersPercent, setErsPercent] = useState(100)
-  const scrollFrameRef = useRef<number | null>(null)
+  const [isScrolling, setIsScrolling] = useState(false)
+  const scrollDebounceRef = useRef<number | null>(null)
+
+  // Framer Motion scroll values
+  const { scrollYProgress } = useScroll()
+  const ersRaw = useTransform(scrollYProgress, [0, 1], [100, 0])
+  const ersRounded = useTransform(ersRaw, (v) => Math.round(v))
 
   useEffect(() => {
     setActiveId(observedActiveId)
   }, [observedActiveId])
 
+  // useMotionValueEvent to track scroll progress and debounce "isScrolling" state
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    // Toggle hasScrolled based on a small threshold (2% scroll)
+    const scrolled = typeof latest === 'number' ? latest > 0.02 : false
+    setHasScrolled(scrolled)
+
+    // Handle DRS scrolling indicator with a short debounce
+    setIsScrolling(true)
+    if (scrollDebounceRef.current) {
+      window.clearTimeout(scrollDebounceRef.current)
+    }
+    scrollDebounceRef.current = window.setTimeout(() => {
+      setIsScrolling(false)
+      scrollDebounceRef.current = null
+    }, 150)
+  })
+
+  // clean up any outstanding timeout on unmount
   useEffect(() => {
-    const updateScrollMetrics = () => {
-      setHasScrolled(window.scrollY > 20)
-
-      const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1)
-      const currentScroll = Math.min(Math.max(window.scrollY, 0), maxScroll)
-      const progress = (currentScroll / maxScroll) * 100
-
-      setErsPercent(Math.round(100 - progress))
-    }
-
-    const handleScroll = () => {
-      if (scrollFrameRef.current !== null) {
-        return
-      }
-
-      scrollFrameRef.current = window.requestAnimationFrame(() => {
-        scrollFrameRef.current = null
-        updateScrollMetrics()
-      })
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    updateScrollMetrics()
-
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-
-      if (scrollFrameRef.current !== null) {
-        window.cancelAnimationFrame(scrollFrameRef.current)
+      if (scrollDebounceRef.current) {
+        window.clearTimeout(scrollDebounceRef.current)
       }
     }
   }, [])
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-2 pt-[max(env(safe-area-inset-top),0.5rem)] sm:px-6 sm:pt-4">
-      <nav
+      <motion.nav
+        layout
+        animate={{ width: hasScrolled ? '42rem' : '100%' }}
+        transition={{ type: 'spring', stiffness: 160, damping: 28 }}
         className={cn(
-          'glass-hud mx-auto flex items-center transform-gpu overflow-hidden border-2 transition-all duration-500 ease-in-out',
+          'glass-hud mx-auto flex items-center transform-gpu will-change-transform overflow-hidden border-2 min-h-[56px]',
           hasScrolled
             ? 'lg:max-w-2xl lg:justify-center lg:gap-8 lg:rounded-full lg:border-lime-500/30 lg:px-4 lg:py-2 lg:shadow-[0_0_30px_rgba(132,204,22,0.12)]'
             : 'lg:max-w-6xl lg:justify-between lg:rounded-sm lg:border-white/10 lg:px-2.5 lg:py-2',
@@ -69,7 +69,7 @@ export function Navbar() {
         <a
           href="#home"
           className={cn(
-            'group flex shrink-0 items-center gap-2 transform-gpu transition-all duration-500 ease-in-out',
+            'group flex shrink-0 items-center gap-2 transform-gpu will-change-transform transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]',
             hasScrolled ? 'translate-x-0 scale-95' : 'translate-x-0 scale-100',
           )}
         >
@@ -79,12 +79,11 @@ export function Navbar() {
           </span>
         </a>
 
-        <div
+        <motion.div
+          layout
+          transition={{ type: 'spring', stiffness: 200, damping: 25 }}
           className={cn(
-            'hidden transform-gpu items-center gap-4 overflow-hidden font-mono text-xs uppercase tracking-wider transition-all duration-500 ease-in-out lg:flex lg:gap-6',
-            hasScrolled
-              ? 'lg:w-auto lg:justify-center lg:opacity-100 lg:scale-100'
-              : 'lg:justify-center lg:opacity-100 lg:scale-100',
+            'hidden transform-gpu will-change-transform items-center gap-4 overflow-hidden font-mono text-xs uppercase tracking-wider lg:flex lg:gap-6',
           )}
         >
           <span
@@ -95,47 +94,51 @@ export function Navbar() {
                 : 'text-emerald-500/70',
             )}
           >
-            DRS: {hasScrolled ? 'ENABLED' : 'AVAILABLE'}
+            DRS: {isScrolling ? 'ENABLED' : 'AVAILABLE'}
           </span>
-          <span className="text-cyan-400">ERS: {ersPercent}%</span>
-        </div>
+          <span className="text-cyan-400">
+            ERS: <motion.span>{ersRounded}</motion.span>%
+          </span>
+        </motion.div>
 
-        <ul
-          className={cn(
-            'relative hidden transform-gpu items-center gap-0.5 overflow-hidden transition-all duration-500 ease-in-out lg:flex',
-            hasScrolled
-              ? 'lg:w-0 lg:scale-95 lg:opacity-0 lg:pointer-events-none lg:overflow-hidden'
-              : 'lg:w-auto lg:scale-100 lg:opacity-100',
+        <AnimatePresence>
+          {!hasScrolled && (
+            <motion.ul
+              key="nav-links"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className={cn('relative hidden transform-gpu items-center gap-0.5 overflow-hidden lg:flex lg:px-2.5')}
+            >
+              {navLinks.map((link) => {
+                const isActive = activeId === link.id
+                return (
+                  <li key={link.id} className="relative">
+                    <a
+                      href={link.href}
+                      onClick={() => setActiveId(link.id)}
+                      className={cn(
+                        'relative z-10 px-3 py-2 font-display text-xs font-bold uppercase tracking-wider transition-colors',
+                        isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-200',
+                      )}
+                    >
+                      {link.label}
+                      <span className="ml-1 font-mono-data text-[9px] text-zinc-600">G{link.gear}</span>
+                    </a>
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-pill"
+                        className="absolute inset-0 rounded-sm border border-[#d4ff00]/40 bg-[#d4ff00]/10 checkered-active"
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </li>
+                )
+              })}
+            </motion.ul>
           )}
-        >
-          {navLinks.map((link) => {
-            const isActive = activeId === link.id
-            return (
-              <li key={link.id} className="relative">
-                <a
-                  href={link.href}
-                  onClick={() => setActiveId(link.id)}
-                  className={cn(
-                    'relative z-10 px-3 py-2 font-display text-xs font-bold uppercase tracking-wider transition-colors',
-                    isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-200',
-                  )}
-                >
-                  {link.label}
-                  <span className="ml-1 font-mono-data text-[9px] text-zinc-600">
-                    G{link.gear}
-                  </span>
-                </a>
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-pill"
-                    className="absolute inset-0 rounded-sm border border-[#d4ff00]/40 bg-[#d4ff00]/10 checkered-active"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-              </li>
-            )
-          })}
-        </ul>
+        </AnimatePresence>
 
         <button
           type="button"
@@ -146,7 +149,7 @@ export function Navbar() {
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
-      </nav>
+      </motion.nav>
 
       <AnimatePresence>
         {mobileOpen && (

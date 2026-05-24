@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowDown, Flag } from 'lucide-react'
+import { AlertTriangle, ArrowDown, Flag, Radio } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { typingRoles } from '../../data/skills'
 import { useTypingEffect } from '../../hooks/useTypingEffect'
@@ -7,11 +7,11 @@ import { MagneticButton } from '../ui/MagneticButton'
 import { LightsOut } from '../ui/LightsOut'
 import { TrackBackground } from '../ui/TrackBackground'
 
-type BadgeState = 'green' | 'radio' | 'pit'
+type CurrentStatus = 'green' | 'garage' | 'radio'
 
 export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
   const [raceStarted, setRaceStarted] = useState(false)
-  const [badgeState, setBadgeState] = useState<BadgeState>('green')
+  const [currentStatus, setCurrentStatus] = useState<CurrentStatus>('green')
   const badgeResetTimerRef = useRef<number | null>(null)
   const typedRole = useTypingEffect(typingRoles, 70, 2200)
 
@@ -20,28 +20,8 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
     onRaceStart?.()
   }, [onRaceStart])
 
-  const triggerPitLaneBadge = useCallback(() => {
-    if (badgeResetTimerRef.current) {
-      window.clearTimeout(badgeResetTimerRef.current)
-      badgeResetTimerRef.current = null
-    }
-    setBadgeState('pit')
-  }, [])
-
-  const resetPitLaneBadge = useCallback(() => {
-    setBadgeState((prev) => (prev === 'pit' ? 'green' : prev))
-  }, [])
-
-  const triggerRadioCheckBadge = useCallback(() => {
-    setBadgeState('radio')
-
-    if (badgeResetTimerRef.current) {
-      window.clearTimeout(badgeResetTimerRef.current)
-    }
-
-    badgeResetTimerRef.current = window.setTimeout(() => {
-      setBadgeState('green')
-    }, 3000)
+  const resetStatus = useCallback(() => {
+    setCurrentStatus('green')
   }, [])
 
   useEffect(() => {
@@ -67,23 +47,23 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl"
         >
-          <motion.p
-            className={
-              badgeState === 'radio'
-                ? 'mb-6 inline-flex min-h-9 items-center gap-2 border border-[#E10600]/65 bg-[#E10600]/15 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-[#ff8a80]'
-                : badgeState === 'pit'
-                  ? 'mb-6 inline-flex min-h-9 items-center gap-2 border border-[#ffbf00]/70 bg-[#ffbf00]/16 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-[#ffd86a]'
-                  : 'mb-6 inline-flex min-h-9 items-center gap-2 border border-[#d4ff00]/55 bg-[#d4ff00]/10 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-[#d4ff00]'
-            }
+                  <motion.p
+                    className={
+                      currentStatus === 'radio'
+                        ? 'mb-6 inline-flex min-h-9 items-center gap-2 border border-cyan-400/40 bg-cyan-400/10 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-cyan-400 transition-all duration-300 ease-in-out'
+                        : currentStatus === 'garage'
+                          ? 'mb-6 inline-flex min-h-9 items-center gap-2 border border-red-500/35 bg-red-500/10 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-red-500 shadow-[0_0_18px_rgba(239,68,68,0.22)] transition-all duration-300 ease-in-out'
+                          : 'mb-6 inline-flex min-h-9 items-center gap-2 border border-lime-500/30 bg-lime-500/10 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-lime-400 transition-all duration-300 ease-in-out'
+                    }
             initial={{ opacity: 0 }}
             animate={
               raceStarted
-                ? badgeState === 'radio'
+                        ? currentStatus === 'radio'
                   ? {
                       opacity: [1, 0.28, 1, 0.35, 1],
                       scale: [1, 1.03, 1, 1.025, 1],
                     }
-                  : badgeState === 'pit'
+                          : currentStatus === 'garage'
                     ? {
                         opacity: [1, 0.3, 1, 0.35, 1],
                         scale: [1, 1.04, 1, 1.03, 1],
@@ -92,48 +72,46 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
                 : {}
             }
             transition={
-              badgeState === 'radio'
+              currentStatus === 'radio'
                 ? { delay: 0.1, duration: 0.7, ease: 'easeInOut' }
-                : badgeState === 'pit'
+                : currentStatus === 'garage'
                   ? { delay: 0.1, duration: 0.6, ease: 'easeInOut' }
                 : { delay: 0.1, duration: 0.25 }
             }
           >
             <motion.span
               className={
-                badgeState === 'radio'
-                  ? 'h-2.5 w-2.5 rounded-full bg-[#E10600] shadow-[0_0_10px_#E10600]'
-                  : badgeState === 'pit'
-                    ? 'h-2.5 w-2.5 rounded-full bg-[#ffbf00] shadow-[0_0_10px_#ffbf00]'
-                  : 'h-2.5 w-2.5 rounded-full bg-[#d4ff00] shadow-[0_0_10px_#d4ff00]'
+                currentStatus === 'radio'
+                  ? 'h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.85)]'
+                  : currentStatus === 'garage'
+                    ? 'h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.85)]'
+                    : 'h-2.5 w-2.5 rounded-full bg-lime-400 shadow-[0_0_10px_rgba(163,230,53,0.85)]'
               }
               animate={
-                badgeState === 'radio'
+                currentStatus === 'radio'
                   ? { opacity: [1, 0.25, 1, 0.25, 1], scale: [1, 1.35, 1, 1.3, 1] }
-                  : badgeState === 'pit'
+                  : currentStatus === 'garage'
                     ? { opacity: [1, 0.25, 1, 0.3, 1], scale: [1, 1.3, 1, 1.25, 1] }
                   : { opacity: 1, scale: 1 }
               }
               transition={
-                badgeState === 'radio' || badgeState === 'pit'
+                currentStatus === 'radio' || currentStatus === 'garage'
                   ? { duration: 0.65, ease: 'easeInOut' }
                   : {}
               }
             />
-            <Flag
-              className={
-                badgeState === 'radio'
-                  ? 'h-4 w-4 text-[#E10600]'
-                  : badgeState === 'pit'
-                    ? 'h-4 w-4 text-[#ffbf00]'
-                    : 'h-4 w-4 text-[#d4ff00]'
-              }
-            />
-            {badgeState === 'radio'
-              ? '📻 RADIO CHECK // BOX BOX BOX'
-              : badgeState === 'pit'
-                ? '🏎️ IN THE PIT LANE // ENTRANCE'
-                : '🟢 GREEN LIGHT'}
+            {currentStatus === 'radio' ? (
+              <Radio className="h-4 w-4 text-cyan-400" />
+            ) : currentStatus === 'garage' ? (
+              <AlertTriangle className="h-4 w-4 text-red-500" />
+            ) : (
+              <Flag className="h-4 w-4 text-lime-400" />
+            )}
+            {currentStatus === 'radio'
+              ? 'RADIO COMMS ACTIVE'
+              : currentStatus === 'garage'
+                ? 'GARAGE PIT ENTRY'
+                : 'GREEN LIGHT'}
           </motion.p>
 
           <h1 className="font-display text-4xl font-black uppercase leading-[1.05] tracking-wider text-white sm:text-5xl lg:text-7xl">
@@ -161,16 +139,16 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
             <MagneticButton
               href="#projects"
               variant="primary"
-              onMouseEnter={triggerPitLaneBadge}
-              onMouseLeave={resetPitLaneBadge}
+              onMouseEnter={() => setCurrentStatus('garage')}
+              onMouseLeave={resetStatus}
             >
               View Garage
             </MagneticButton>
             <MagneticButton
               href="#contact"
               variant="secondary"
-              onClick={triggerRadioCheckBadge}
-              onMouseEnter={triggerRadioCheckBadge}
+              onMouseEnter={() => setCurrentStatus('radio')}
+              onMouseLeave={resetStatus}
             >
               Radio Check
             </MagneticButton>

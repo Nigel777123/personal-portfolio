@@ -39,5 +39,5 @@ export interface NavLink {
 export interface SocialLink {
   name: string
   href: string
-  icon: 'code' | 'network' | 'bird' | 'mail'
+  icon: 'github' | 'instagram' | 'linkedin' | 'mail'
 }
