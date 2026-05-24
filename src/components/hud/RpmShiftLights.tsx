@@ -9,7 +9,7 @@ export function RpmShiftLights() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-x-0 top-[4.25rem] z-40 flex justify-center gap-1 px-4 sm:top-[4.5rem]"
+      className="pointer-events-none fixed inset-x-0 top-[4.25rem] z-40 hidden justify-center gap-1 px-4 md:flex sm:top-[4.5rem]"
       aria-hidden
     >
       <div className="flex gap-0.5 rounded-sm border border-white/10 bg-neutral-950/80 px-2 py-1 backdrop-blur-md">

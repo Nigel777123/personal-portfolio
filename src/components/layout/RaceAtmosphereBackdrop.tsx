@@ -139,7 +139,7 @@ export function RaceAtmosphereBackdrop() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(225,6,0,0.08),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.03),transparent_28%)] opacity-90" />
 
       <motion.div
-        className="absolute inset-0 will-change-transform"
+        className="absolute inset-0 hidden will-change-transform md:block"
         style={{ y: meshY }}
       >
         <svg

@@ -45,30 +45,30 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
           initial={{ opacity: 0, x: -80 }}
           animate={raceStarted ? { opacity: 1, x: 0 } : { opacity: 0, x: -80 }}
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-3xl"
+          className="w-full max-w-3xl"
         >
-                  <motion.p
-                    className={
-                      currentStatus === 'radio'
-                        ? 'mb-6 inline-flex min-h-9 items-center gap-2 border border-cyan-400/40 bg-cyan-400/10 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-cyan-400 transition-all duration-300 ease-in-out'
-                        : currentStatus === 'garage'
-                          ? 'mb-6 inline-flex min-h-9 items-center gap-2 border border-red-500/35 bg-red-500/10 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-red-500 shadow-[0_0_18px_rgba(239,68,68,0.22)] transition-all duration-300 ease-in-out'
-                          : 'mb-6 inline-flex min-h-9 items-center gap-2 border border-lime-500/30 bg-lime-500/10 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-lime-400 transition-all duration-300 ease-in-out'
-                    }
+          <motion.p
+            className={
+              currentStatus === 'radio'
+                ? 'mb-6 inline-flex min-h-9 items-center gap-2 border border-cyan-400/40 bg-cyan-400/10 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-cyan-400 transition-all duration-300 ease-in-out'
+                : currentStatus === 'garage'
+                  ? 'mb-6 inline-flex min-h-9 items-center gap-2 border border-red-500/35 bg-red-500/10 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-red-500 shadow-[0_0_18px_rgba(239,68,68,0.22)] transition-all duration-300 ease-in-out'
+                  : 'mb-6 inline-flex min-h-9 items-center gap-2 border border-lime-500/30 bg-lime-500/10 px-4 py-1.5 font-mono-data text-xs uppercase tracking-widest text-lime-400 transition-all duration-300 ease-in-out'
+            }
             initial={{ opacity: 0 }}
             animate={
               raceStarted
-                        ? currentStatus === 'radio'
+                ? currentStatus === 'radio'
                   ? {
                       opacity: [1, 0.28, 1, 0.35, 1],
                       scale: [1, 1.03, 1, 1.025, 1],
                     }
-                          : currentStatus === 'garage'
+                  : currentStatus === 'garage'
                     ? {
                         opacity: [1, 0.3, 1, 0.35, 1],
                         scale: [1, 1.04, 1, 1.03, 1],
                       }
-                  : { opacity: 1, scale: 1 }
+                    : { opacity: 1, scale: 1 }
                 : {}
             }
             transition={
@@ -76,7 +76,7 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
                 ? { delay: 0.1, duration: 0.7, ease: 'easeInOut' }
                 : currentStatus === 'garage'
                   ? { delay: 0.1, duration: 0.6, ease: 'easeInOut' }
-                : { delay: 0.1, duration: 0.25 }
+                  : { delay: 0.1, duration: 0.25 }
             }
           >
             <motion.span
@@ -114,10 +114,10 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
                 : 'GREEN LIGHT'}
           </motion.p>
 
-          <h1 className="font-display text-4xl font-black uppercase leading-[1.05] tracking-wider text-white sm:text-5xl lg:text-7xl">
+          <h1 className="max-w-[14ch] font-display text-3xl font-black uppercase leading-[0.98] tracking-wider text-white sm:max-w-none sm:text-5xl lg:text-7xl">
             <span className="block text-zinc-500">Driver</span>
             <span className="f1-gradient-text">Nigel Fernandes</span>
-            <span className="mt-3 block text-2xl text-zinc-300 sm:text-3xl lg:text-4xl">
+            <span className="mt-3 block text-lg text-zinc-300 sm:text-3xl lg:text-4xl">
               <span className="text-[#E10600]">#</span>19 —{' '}
               <span className="inline-block min-w-[14ch] border-r-2 border-[#d4ff00] pr-1 text-[#d4ff00]">
                 {typedRole}
@@ -141,6 +141,8 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
               variant="primary"
               onMouseEnter={() => setCurrentStatus('garage')}
               onMouseLeave={resetStatus}
+              onTouchStart={() => setCurrentStatus('garage')}
+              onTouchEnd={resetStatus}
             >
               View Garage
             </MagneticButton>
@@ -149,6 +151,8 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
               variant="secondary"
               onMouseEnter={() => setCurrentStatus('radio')}
               onMouseLeave={resetStatus}
+              onTouchStart={() => setCurrentStatus('radio')}
+              onTouchEnd={resetStatus}
             >
               Radio Check
             </MagneticButton>

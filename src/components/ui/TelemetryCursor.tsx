@@ -21,6 +21,7 @@ function isInteractiveElement(target: EventTarget | null) {
 
 export function TelemetryCursor() {
   const [isClient, setIsClient] = useState(false)
+  const [isTouchDevice, setIsTouchDevice] = useState(false)
   const [cursor, setCursor] = useState<Point>({ x: -100, y: -100 })
   const [ring, setRing] = useState<Point>({ x: -100, y: -100 })
   const [locked, setLocked] = useState(false)
@@ -28,6 +29,14 @@ export function TelemetryCursor() {
 
   useEffect(() => {
     setIsClient(true)
+
+    const coarsePointer =
+      window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(hover: none)').matches
+
+    if (coarsePointer) {
+      setIsTouchDevice(true)
+      return
+    }
 
     const handleMouseMove = (event: MouseEvent) => {
       const nextPoint = { x: event.clientX, y: event.clientY }
@@ -68,6 +77,10 @@ export function TelemetryCursor() {
   }, [])
 
   if (!isClient || typeof window === 'undefined') {
+    return null
+  }
+
+  if (isTouchDevice) {
     return null
   }
 

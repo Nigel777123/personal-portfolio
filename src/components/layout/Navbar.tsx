@@ -55,10 +55,10 @@ export function Navbar() {
     <header className="fixed inset-x-0 top-0 z-50 px-2 pt-[max(env(safe-area-inset-top),0.5rem)] sm:px-6 sm:pt-4">
       <motion.nav
         layout
-        animate={{ width: hasScrolled ? '42rem' : '100%' }}
+        animate={{ width: hasScrolled ? 'min(42rem, calc(100vw - 1rem))' : '100%' }}
         transition={{ type: 'spring', stiffness: 160, damping: 28 }}
         className={cn(
-          'glass-hud mx-auto flex items-center transform-gpu will-change-transform overflow-hidden border-2 min-h-[56px]',
+          'glass-hud mx-auto flex w-full items-center justify-between gap-2 overflow-hidden border-2 min-h-[56px] transform-gpu will-change-transform',
           hasScrolled
             ? 'lg:max-w-2xl lg:justify-center lg:gap-8 lg:rounded-full lg:border-lime-500/30 lg:px-4 lg:py-2 lg:shadow-[0_0_30px_rgba(132,204,22,0.12)]'
             : 'lg:max-w-6xl lg:justify-between lg:rounded-sm lg:border-white/10 lg:px-2.5 lg:py-2',
@@ -83,7 +83,7 @@ export function Navbar() {
           layout
           transition={{ type: 'spring', stiffness: 200, damping: 25 }}
           className={cn(
-            'hidden transform-gpu will-change-transform items-center gap-4 overflow-hidden font-mono text-xs uppercase tracking-wider lg:flex lg:gap-6',
+            'flex min-w-0 shrink-0 items-center gap-2 overflow-hidden whitespace-nowrap font-mono text-[10px] uppercase tracking-wider leading-none sm:text-xs lg:gap-6',
           )}
         >
           <span
@@ -142,7 +142,7 @@ export function Navbar() {
 
         <button
           type="button"
-          className="rounded-sm p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white lg:hidden"
+          className="min-h-11 min-w-11 rounded-sm p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white lg:hidden touch-manipulation"
           onClick={() => setMobileOpen((o) => !o)}
           aria-expanded={mobileOpen}
           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}

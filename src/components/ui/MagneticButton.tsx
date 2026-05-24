@@ -9,6 +9,8 @@ interface MagneticButtonProps {
   onClick?: () => void
   onMouseEnter?: () => void
   onMouseLeave?: () => void
+  onTouchStart?: () => void
+  onTouchEnd?: () => void
   variant?: 'primary' | 'secondary' | 'ghost'
   className?: string
   type?: 'button' | 'submit'
@@ -29,6 +31,8 @@ export function MagneticButton({
   onClick,
   onMouseEnter,
   onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
   variant = 'primary',
   className,
   type = 'button',
@@ -36,7 +40,7 @@ export function MagneticButton({
 }: MagneticButtonProps) {
   const { ref, onMouseMove, onMouseLeave: onMagneticMouseLeave } = useMagnetic(0.22)
   const classes = cn(
-    'inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm transition-shadow duration-300 font-display',
+    'inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-sm px-5 py-3 text-sm transition-shadow duration-300 font-display sm:min-h-12 sm:px-6 sm:py-3.5',
     variants[variant],
     disabled && 'pointer-events-none opacity-50',
     className,
@@ -59,6 +63,12 @@ export function MagneticButton({
           onMouseLeave?.()
           onMagneticMouseLeave()
         }}
+        onTouchStart={onTouchStart}
+        onTouchEnd={() => {
+          onTouchEnd?.()
+          onMouseLeave?.()
+          onMagneticMouseLeave()
+        }}
         className={classes}
         onMouseMove={onMouseMove}
         {...motionProps}
@@ -75,6 +85,12 @@ export function MagneticButton({
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={() => {
+        onMouseLeave?.()
+        onMagneticMouseLeave()
+      }}
+      onTouchStart={onTouchStart}
+      onTouchEnd={() => {
+        onTouchEnd?.()
         onMouseLeave?.()
         onMagneticMouseLeave()
       }}

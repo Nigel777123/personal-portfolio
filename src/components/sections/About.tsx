@@ -1,9 +1,12 @@
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import { skills } from '../../data/skills'
 import { SectionHeading } from '../ui/SectionHeading'
 import { TelemetryGauge } from '../ui/TelemetryGauge'
 
 export function About() {
+  const [radioFeedActive, setRadioFeedActive] = useState(false)
+
   return (
     <section id="about" className="section-padding relative mx-auto max-w-6xl">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -16,7 +19,7 @@ export function About() {
 
       <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
         <motion.div
-          className="relative mx-auto w-full max-w-sm lg:mx-0"
+          className="relative mx-auto w-full max-w-md lg:mx-0"
           initial={{ opacity: 0, x: -24 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
@@ -25,7 +28,12 @@ export function About() {
           <div className="absolute -inset-1 rounded-sm bg-gradient-to-br from-[#E10600] via-neutral-800 to-[#d4ff00] opacity-80" />
           <div className="relative overflow-hidden rounded-sm border-2 border-neutral-800 bg-neutral-950 p-1">
             {/* Outer gradient/border is preserved above */}
-            <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-neutral-900 group">
+            <div
+              className="group relative flex aspect-square items-center justify-center overflow-hidden bg-neutral-900 touch-manipulation"
+              onTouchStart={() => setRadioFeedActive(true)}
+              onTouchEnd={() => setRadioFeedActive(false)}
+              onTouchCancel={() => setRadioFeedActive(false)}
+            >
               {/* Image layer - fills the square. Replace '/pfp.jpg' with your chosen filename if needed. */}
               {/* If migrating to Next.js, swap this <img> for `import Image from 'next/image'` and use layout/ fill props. */}
               <img
@@ -34,7 +42,13 @@ export function About() {
                 className="absolute inset-0 h-full w-full object-cover opacity-80 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0"
               />
 
-              <div className="absolute top-4 left-4 right-4 z-[5] flex items-center justify-between pointer-events-none opacity-0 -translate-y-1 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0">
+              <div
+                className={
+                  radioFeedActive
+                    ? 'absolute top-4 left-4 right-4 z-[5] flex items-center justify-between pointer-events-none opacity-100 translate-y-0 transition-all duration-300 ease-out'
+                    : 'absolute top-4 left-4 right-4 z-[5] flex items-center justify-between pointer-events-none opacity-0 -translate-y-1 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0'
+                }
+              >
                 <div className="flex items-center gap-2 rounded-sm border border-lime-400/30 bg-neutral-950/70 px-2.5 py-1 backdrop-blur-sm">
                   <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-400 shadow-[0_0_10px_rgba(163,230,53,0.9)]" />
                   <span className="font-mono text-[10px] tracking-wider text-lime-400">
