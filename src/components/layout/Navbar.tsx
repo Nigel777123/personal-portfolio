@@ -1,10 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useF1Scroll } from '../../context/F1ScrollContext'
+import { useEffect, useRef, useState } from 'react'
 import { navLinks } from '../../data/navigation'
 import { useActiveSection } from '../../hooks/useActiveSection'
-import { useMotionValueDisplay } from '../../hooks/useMotionValueDisplay'
 import { cn } from '../../utils/cn'
 import { TrackMapLogo } from '../ui/TrackMapLogo'
 
@@ -14,12 +12,73 @@ export function Navbar() {
   const observedActiveId = useActiveSection(sectionIds)
   const [activeId, setActiveId] = useState(observedActiveId)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { speedKmh, gear } = useF1Scroll()
-  const speed = useMotionValueDisplay(speedKmh)
+  const [isScrolling, setIsScrolling] = useState(false)
+  const [ersPercent, setErsPercent] = useState(100)
+  const scrollFrameRef = useRef<number | null>(null)
+  const scrollTimeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
     setActiveId(observedActiveId)
   }, [observedActiveId])
+
+  useEffect(() => {
+    const updateScrollMetrics = () => {
+      const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1)
+      const currentScroll = Math.min(Math.max(window.scrollY, 0), maxScroll)
+      const progress = (currentScroll / maxScroll) * 100
+
+      setErsPercent(Math.round(100 - progress))
+    }
+
+    const handleScroll = () => {
+      setIsScrolling(true)
+
+      if (scrollTimeoutRef.current) {
+        window.clearTimeout(scrollTimeoutRef.current)
+      }
+
+      if (scrollFrameRef.current !== null) {
+        return
+      }
+
+      scrollFrameRef.current = window.requestAnimationFrame(() => {
+        scrollFrameRef.current = null
+        updateScrollMetrics()
+      })
+
+      scrollTimeoutRef.current = window.setTimeout(() => {
+        setIsScrolling(false)
+      }, 180)
+    }
+
+    const handleResize = () => {
+      if (scrollFrameRef.current !== null) {
+        window.cancelAnimationFrame(scrollFrameRef.current)
+      }
+
+      scrollFrameRef.current = window.requestAnimationFrame(() => {
+        scrollFrameRef.current = null
+        updateScrollMetrics()
+      })
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleResize, { passive: true })
+    updateScrollMetrics()
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleResize)
+
+      if (scrollTimeoutRef.current) {
+        window.clearTimeout(scrollTimeoutRef.current)
+      }
+
+      if (scrollFrameRef.current !== null) {
+        window.cancelAnimationFrame(scrollFrameRef.current)
+      }
+    }
+  }, [])
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-2 pt-[max(env(safe-area-inset-top),0.5rem)] sm:px-6 sm:pt-4">
@@ -34,14 +93,18 @@ export function Navbar() {
           </span>
         </a>
 
-        <div className="hidden items-center gap-4 font-mono-data text-xs uppercase tracking-wider text-zinc-500 md:flex">
-          <span>
-            <span className="text-[#d4ff00]">{speed}</span> km/h
+        <div className="hidden items-center justify-center gap-6 font-mono text-xs uppercase tracking-wider lg:flex lg:gap-8">
+          <span
+            className={cn(
+              'transition-colors duration-150',
+              isScrolling
+                ? 'text-emerald-400 font-bold drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]'
+                : 'text-emerald-500/70',
+            )}
+          >
+            DRS: {isScrolling ? 'ENABLED' : 'AVAILABLE'}
           </span>
-          <span className="text-white/20">|</span>
-          <span>
-            Gear <span className="text-[#E10600]">{gear}</span>
-          </span>
+          <span className="text-cyan-400">ERS: {ersPercent}%</span>
         </div>
 
         <ul className="relative hidden items-center gap-0.5 lg:flex">
@@ -93,9 +156,6 @@ export function Navbar() {
             exit={{ opacity: 0, y: -8 }}
             className="glass-hud mx-auto mt-2 max-w-6xl rounded-sm border border-white/10 p-4 lg:hidden"
           >
-            <p className="mb-3 font-mono-data text-xs text-zinc-500">
-              {speed} KM/H · GEAR {gear}
-            </p>
             <ul className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <li key={link.id}>
@@ -112,8 +172,7 @@ export function Navbar() {
                         : 'text-zinc-500 hover:bg-white/5 hover:text-white',
                     )}
                   >
-                    {link.label}{' '}
-                    <span className="font-mono-data text-xs text-zinc-600">G{link.gear}</span>
+                    {link.label}
                   </a>
                 </li>
               ))}

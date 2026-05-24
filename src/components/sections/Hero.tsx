@@ -133,14 +133,14 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
               ? '📻 RADIO CHECK // BOX BOX BOX'
               : badgeState === 'pit'
                 ? '🏎️ IN THE PIT LANE // ENTRANCE'
-                : '🟢 GREEN LIGHT - AVAILABLE FOR CONTRACTS'}
+                : '🟢 GREEN LIGHT'}
           </motion.p>
 
           <h1 className="font-display text-4xl font-black uppercase leading-[1.05] tracking-wider text-white sm:text-5xl lg:text-7xl">
             <span className="block text-zinc-500">Driver</span>
-            <span className="f1-gradient-text">Your Name</span>
+            <span className="f1-gradient-text">Nigel Fernandes</span>
             <span className="mt-3 block text-2xl text-zinc-300 sm:text-3xl lg:text-4xl">
-              <span className="text-[#E10600]">#</span>77 —{' '}
+              <span className="text-[#E10600]">#</span>19 —{' '}
               <span className="inline-block min-w-[14ch] border-r-2 border-[#d4ff00] pr-1 text-[#d4ff00]">
                 {typedRole}
               </span>
@@ -148,8 +148,8 @@ export function Hero({ onRaceStart }: { onRaceStart?: () => void }) {
           </h1>
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-400 sm:text-xl">
-            Engineering interfaces at qualifying pace — precision telemetry, ruthless performance,
-            and podium-worthy motion design.
+            Building high performance interfaces engineered for maximum velocity.
+            Turning complex telemetry into seamless, reactive digital machinery.
           </p>
 
           <motion.div

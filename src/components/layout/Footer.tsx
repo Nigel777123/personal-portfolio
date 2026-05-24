@@ -18,7 +18,7 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-8 sm:flex-row">
         <div className="text-center sm:text-left">
           <p className="font-display text-lg font-bold uppercase tracking-widest text-white">
-            Your Name
+            Nigel Fernandes
           </p>
           <p className="mt-1 font-mono-data text-xs uppercase tracking-widest text-zinc-600">
             © {year} — Race Engineer Division

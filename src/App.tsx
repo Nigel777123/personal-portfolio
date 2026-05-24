@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { useState } from 'react'
 import { F1ScrollProvider } from './context/F1ScrollContext'
 import { RaceAtmosphereBackdrop } from './components/layout/RaceAtmosphereBackdrop'
+import { TelemetryCursor } from './components/ui/TelemetryCursor'
 import { Navbar } from './components/layout/Navbar'
 import { Footer } from './components/layout/Footer'
 import { RpmShiftLights } from './components/hud/RpmShiftLights'
@@ -36,6 +37,7 @@ export default function App() {
     <F1ScrollProvider>
       <div className="relative isolate min-h-screen overflow-x-hidden bg-zinc-950">
         <RaceAtmosphereBackdrop />
+        <TelemetryCursor />
         {raceStarted && <RpmShiftLights />}
         {raceStarted && <Navbar />}
         {raceStarted && <SpeedometerHUD />}
