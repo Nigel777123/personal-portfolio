@@ -14,5 +14,5 @@ export const typingRoles = [
   'Frontend Developer',
   'Aerodynamic UI',
   'Telemetry Specialist',
-  'Performance Optimization',
+  'Performance Tuner',
 ]
