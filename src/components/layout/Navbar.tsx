@@ -12,10 +12,9 @@ export function Navbar() {
   const observedActiveId = useActiveSection(sectionIds)
   const [activeId, setActiveId] = useState(observedActiveId)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [isScrolling, setIsScrolling] = useState(false)
+  const [hasScrolled, setHasScrolled] = useState(false)
   const [ersPercent, setErsPercent] = useState(100)
   const scrollFrameRef = useRef<number | null>(null)
-  const scrollTimeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
     setActiveId(observedActiveId)
@@ -23,6 +22,8 @@ export function Navbar() {
 
   useEffect(() => {
     const updateScrollMetrics = () => {
+      setHasScrolled(window.scrollY > 20)
+
       const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1)
       const currentScroll = Math.min(Math.max(window.scrollY, 0), maxScroll)
       const progress = (currentScroll / maxScroll) * 100
@@ -31,29 +32,8 @@ export function Navbar() {
     }
 
     const handleScroll = () => {
-      setIsScrolling(true)
-
-      if (scrollTimeoutRef.current) {
-        window.clearTimeout(scrollTimeoutRef.current)
-      }
-
       if (scrollFrameRef.current !== null) {
         return
-      }
-
-      scrollFrameRef.current = window.requestAnimationFrame(() => {
-        scrollFrameRef.current = null
-        updateScrollMetrics()
-      })
-
-      scrollTimeoutRef.current = window.setTimeout(() => {
-        setIsScrolling(false)
-      }, 180)
-    }
-
-    const handleResize = () => {
-      if (scrollFrameRef.current !== null) {
-        window.cancelAnimationFrame(scrollFrameRef.current)
       }
 
       scrollFrameRef.current = window.requestAnimationFrame(() => {
@@ -63,16 +43,10 @@ export function Navbar() {
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', handleResize, { passive: true })
     updateScrollMetrics()
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleResize)
-
-      if (scrollTimeoutRef.current) {
-        window.clearTimeout(scrollTimeoutRef.current)
-      }
 
       if (scrollFrameRef.current !== null) {
         window.cancelAnimationFrame(scrollFrameRef.current)
@@ -83,31 +57,57 @@ export function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-2 pt-[max(env(safe-area-inset-top),0.5rem)] sm:px-6 sm:pt-4">
       <nav
-        className="glass-hud mx-auto flex max-w-6xl items-center justify-between rounded-sm border-2 border-white/10 px-2.5 py-2 sm:px-5 sm:py-3"
+        className={cn(
+          'glass-hud mx-auto flex items-center transform-gpu overflow-hidden border-2 transition-all duration-500 ease-in-out',
+          hasScrolled
+            ? 'lg:max-w-2xl lg:justify-center lg:gap-8 lg:rounded-full lg:border-lime-500/30 lg:px-4 lg:py-2 lg:shadow-[0_0_30px_rgba(132,204,22,0.12)]'
+            : 'lg:max-w-6xl lg:justify-between lg:rounded-sm lg:border-white/10 lg:px-2.5 lg:py-2',
+          'px-2.5 py-2 sm:px-5 sm:py-3',
+        )}
         aria-label="Main navigation"
       >
-        <a href="#home" className="group flex shrink-0 items-center gap-2">
+        <a
+          href="#home"
+          className={cn(
+            'group flex shrink-0 items-center gap-2 transform-gpu transition-all duration-500 ease-in-out',
+            hasScrolled ? 'translate-x-0 scale-95' : 'translate-x-0 scale-100',
+          )}
+        >
           <TrackMapLogo />
           <span className="whitespace-nowrap font-display text-[10px] font-bold uppercase tracking-[0.18em] text-white sm:text-sm">
             Race Control
           </span>
         </a>
 
-        <div className="hidden items-center justify-center gap-6 font-mono text-xs uppercase tracking-wider lg:flex lg:gap-8">
+        <div
+          className={cn(
+            'hidden transform-gpu items-center gap-4 overflow-hidden font-mono text-xs uppercase tracking-wider transition-all duration-500 ease-in-out lg:flex lg:gap-6',
+            hasScrolled
+              ? 'lg:w-auto lg:justify-center lg:opacity-100 lg:scale-100'
+              : 'lg:justify-center lg:opacity-100 lg:scale-100',
+          )}
+        >
           <span
             className={cn(
               'transition-colors duration-150',
-              isScrolling
+              hasScrolled
                 ? 'text-emerald-400 font-bold drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]'
                 : 'text-emerald-500/70',
             )}
           >
-            DRS: {isScrolling ? 'ENABLED' : 'AVAILABLE'}
+            DRS: {hasScrolled ? 'ENABLED' : 'AVAILABLE'}
           </span>
           <span className="text-cyan-400">ERS: {ersPercent}%</span>
         </div>
 
-        <ul className="relative hidden items-center gap-0.5 lg:flex">
+        <ul
+          className={cn(
+            'relative hidden transform-gpu items-center gap-0.5 overflow-hidden transition-all duration-500 ease-in-out lg:flex',
+            hasScrolled
+              ? 'lg:w-0 lg:scale-95 lg:opacity-0 lg:pointer-events-none lg:overflow-hidden'
+              : 'lg:w-auto lg:scale-100 lg:opacity-100',
+          )}
+        >
           {navLinks.map((link) => {
             const isActive = activeId === link.id
             return (
