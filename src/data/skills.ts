@@ -12,7 +12,7 @@ export const skills: Skill[] = [
 export const typingRoles = [
   'Simply Lovely...',
   'Frontend Developer',
-  'Aerodynamic UI',
-  'Telemetry Specialist',
-  'Performance Tuner',
+  'Web Designer',
+  'Event Manager',
+  'Audio-visual Management',
 ]
