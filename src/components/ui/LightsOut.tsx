@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
 interface LightsOutProps {
@@ -10,11 +10,21 @@ const HOLD_MS = 700
 const LIGHT_COUNT = 5
 
 export function LightsOut({ onComplete }: LightsOutProps) {
+  const prefersReducedMotion = useReducedMotion()
   const [activeCount, setActiveCount] = useState(0)
   const [allOff, setAllOff] = useState(false)
   const [done, setDone] = useState(false)
 
+  // Skip the start sequence entirely for users who prefer reduced motion.
   useEffect(() => {
+    if (prefersReducedMotion && !done) {
+      setDone(true)
+      onComplete()
+    }
+  }, [prefersReducedMotion, done, onComplete])
+
+  useEffect(() => {
+    if (prefersReducedMotion) return
     if (activeCount < LIGHT_COUNT) {
       const t = setTimeout(() => setActiveCount((c) => c + 1), LIGHT_DELAY_MS)
       return () => clearTimeout(t)

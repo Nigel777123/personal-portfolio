@@ -6,13 +6,23 @@ const RADIUS = 34
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 export function SpeedometerHUD() {
-  const { speedKmh, gaugeProgress, gear, maxSpeed } = useF1Scroll()
+  const { speedKmh, gaugeProgress, gear, maxSpeed, scrollYProgress } = useF1Scroll()
   const speed = useMotionValueDisplay(speedKmh)
   const dashOffset = useTransform(gaugeProgress, (p) => CIRCUMFERENCE * (1 - p))
 
+  // Fade in once the driver leaves the grid (hero) and fade out at the pit exit (footer)
+  // so the HUD never covers hero CTAs on mobile or the footer actions on desktop.
+  const hudOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.03, 0.07, 0.92, 0.97],
+    [0, 0, 1, 1, 0],
+  )
+  const hudY = useTransform(scrollYProgress, [0, 0.07], [24, 0])
+
   return (
-    <div
-      className="fixed bottom-3 right-3 z-50 sm:bottom-4 sm:right-4"
+    <motion.div
+      className="pointer-events-none fixed bottom-3 right-3 z-50 sm:bottom-4 sm:right-4"
+      style={{ opacity: hudOpacity, y: hudY }}
       aria-live="polite"
       aria-label={`Speed ${speed} kilometers per hour, gear ${gear}`}
     >
@@ -89,6 +99,6 @@ export function SpeedometerHUD() {
           Telemetry HUD
         </p>
       </div>
-    </div>
+    </motion.div>
   )
 }

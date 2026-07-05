@@ -83,7 +83,7 @@ export function Navbar() {
           layout
           transition={{ type: 'spring', stiffness: 200, damping: 25 }}
           className={cn(
-            'flex min-w-0 shrink-0 items-center gap-2 overflow-hidden whitespace-nowrap font-mono text-[10px] uppercase tracking-wider leading-none sm:text-xs lg:gap-6',
+            'hidden min-w-0 shrink-0 items-center gap-2 overflow-hidden whitespace-nowrap font-mono text-[10px] uppercase tracking-wider leading-none sm:flex sm:text-xs lg:gap-6',
           )}
         >
           <span
