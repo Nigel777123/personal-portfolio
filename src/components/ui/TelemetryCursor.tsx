@@ -120,9 +120,8 @@ export function TelemetryCursor() {
         aria-hidden
       >
         <div
-          className={`relative flex h-8 w-8 items-center justify-center rounded-full border ${ringTone} ${
-            locked ? 'border-dashed' : 'border-solid'
-          } transition-[border-color,transform,box-shadow] duration-150 ease-out`}
+          className={`relative flex h-8 w-8 items-center justify-center rounded-full border ${ringTone} ${locked ? 'border-dashed' : 'border-solid'
+            } transition-[border-color,transform,box-shadow] duration-150 ease-out`}
         >
           <span
             className={`absolute left-1/2 top-0 h-1.5 w-px -translate-x-1/2 ${tickTone}`}
@@ -138,13 +137,12 @@ export function TelemetryCursor() {
           />
 
           <span
-            className={`h-1.5 w-1.5 rounded-full ${
-              lockColor === 'cyan'
+            className={`h-1.5 w-1.5 rounded-full ${lockColor === 'cyan'
                 ? 'bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.75)]'
                 : lockColor === 'red'
                   ? 'bg-rose-300 shadow-[0_0_10px_rgba(251,113,133,0.75)]'
                   : 'bg-lime-400 shadow-[0_0_10px_rgba(163,230,53,0.7)]'
-            }`}
+              }`}
           />
         </div>
       </div>

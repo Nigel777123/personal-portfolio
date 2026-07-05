@@ -1,5 +1,4 @@
-import { lazy, Suspense } from 'react'
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { F1ScrollProvider } from './context/F1ScrollContext'
 import { RaceAtmosphereBackdrop } from './components/layout/RaceAtmosphereBackdrop'
 import { F1DataDustBackground } from './components/layout/F1DataDustBackground'
@@ -33,6 +32,7 @@ function SectionFallback() {
 
 export default function App() {
   const [raceStarted, setRaceStarted] = useState(false)
+  const [isHudVisible, setIsHudVisible] = useState(true)
 
   return (
     <F1ScrollProvider>
@@ -41,8 +41,10 @@ export default function App() {
         <F1DataDustBackground />
         <TelemetryCursor />
         {raceStarted && <RpmShiftLights />}
-        {raceStarted && <Navbar />}
-        {raceStarted && <SpeedometerHUD />}
+        {raceStarted && (
+          <Navbar isHudVisible={isHudVisible} onToggleHud={() => setIsHudVisible((v) => !v)} />
+        )}
+        {raceStarted && <SpeedometerHUD isVisible={isHudVisible} />}
         <main className="relative z-10">
           <Hero onRaceStart={() => setRaceStarted(true)} />
           <Suspense fallback={<SectionFallback />}>

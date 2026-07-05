@@ -8,7 +8,12 @@ import { TrackMapLogo } from '../ui/TrackMapLogo'
 
 const sectionIds = navLinks.map((l) => l.id)
 
-export function Navbar() {
+interface NavbarProps {
+  isHudVisible: boolean
+  onToggleHud: () => void
+}
+
+export function Navbar({ isHudVisible, onToggleHud }: NavbarProps) {
   const observedActiveId = useActiveSection(sectionIds)
   const [activeId, setActiveId] = useState(observedActiveId)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -99,6 +104,21 @@ export function Navbar() {
           <span className="text-cyan-400">
             ERS: <motion.span>{ersRounded}</motion.span>%
           </span>
+          <button
+            type="button"
+            onClick={onToggleHud}
+            className={cn(
+              'cursor-pointer font-mono text-[10px] uppercase tracking-wider leading-none sm:text-xs',
+              'transition-all duration-150',
+              isHudVisible
+                ? 'text-[#d4ff00] hover:text-white hover:drop-shadow-[0_0_6px_rgba(212,255,0,0.6)]'
+                : 'text-zinc-600 hover:text-zinc-400',
+            )}
+            aria-pressed={isHudVisible}
+            aria-label={isHudVisible ? 'Hide telemetry HUD' : 'Show telemetry HUD'}
+          >
+            HUD: {isHudVisible ? 'ON' : 'OFF'}
+          </button>
         </motion.div>
 
         <AnimatePresence>
