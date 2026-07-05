@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Code2, ExternalLink, Gauge } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { projectFilters, projects } from '../../data/projects'
+import { projectFilters, getProjects } from '../../data/projects'
 import type { Project, ProjectCategory } from '../../types'
 import { cn } from '../../utils/cn'
 import { SectionHeading } from '../ui/SectionHeading'
@@ -86,10 +86,11 @@ function PitLaneCard({ project }: { project: Project }) {
 
 export function Projects() {
   const [filter, setFilter] = useState<ProjectCategory>('all')
+  const allProjects = getProjects()
 
   const filtered = useMemo(
-    () => (filter === 'all' ? projects : projects.filter((p) => p.category === filter)),
-    [filter],
+    () => (filter === 'all' ? allProjects : allProjects.filter((p) => p.category === filter)),
+    [filter, allProjects],
   )
 
   return (

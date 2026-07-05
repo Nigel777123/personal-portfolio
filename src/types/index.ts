@@ -41,3 +41,12 @@ export interface SocialLink {
   href: string
   icon: 'github' | 'instagram' | 'linkedin' | 'mail'
 }
+
+export interface Transmission {
+  id: string
+  name: string
+  email: string
+  message: string
+  timestamp: string
+  read: boolean
+}

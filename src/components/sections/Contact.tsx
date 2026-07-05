@@ -93,6 +93,8 @@ function FloatingTextarea({
   )
 }
 
+export const TRANSMISSIONS_KEY = 'admin_transmissions'
+
 export function Contact() {
   const [form, setForm] = useState<FormState>({ name: '', email: '', message: '' })
   const [errors, setErrors] = useState<FormErrors>({})
@@ -107,6 +109,23 @@ export function Contact() {
 
     setSubmitting(true)
     await new Promise((r) => setTimeout(r, 900))
+
+    // Save transmission to localStorage for admin panel
+    try {
+      const existing = JSON.parse(localStorage.getItem(TRANSMISSIONS_KEY) ?? '[]')
+      const newMsg = {
+        id: Date.now().toString(),
+        name: form.name,
+        email: form.email,
+        message: form.message,
+        timestamp: new Date().toISOString(),
+        read: false,
+      }
+      localStorage.setItem(TRANSMISSIONS_KEY, JSON.stringify([newMsg, ...existing]))
+    } catch {
+      // ignore storage errors
+    }
+
     setSubmitting(false)
     setSent(true)
     setForm({ name: '', email: '', message: '' })

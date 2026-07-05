@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { experience } from '../../data/experience'
+import { getExperience } from '../../data/experience'
 import type { ExperienceItem } from '../../types'
 import { cn } from '../../utils/cn'
 import { SectionHeading } from '../ui/SectionHeading'
@@ -10,7 +10,8 @@ const TRACK_PATH =
 
 export function Experience() {
   const sectionRef = useRef<HTMLElement>(null)
-  const [expandedId, setExpandedId] = useState<string | null>(experience[0]?.id ?? null)
+  const allExperience = getExperience()
+  const [expandedId, setExpandedId] = useState<string | null>(allExperience[0]?.id ?? null)
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -71,13 +72,13 @@ export function Experience() {
         </motion.div>
 
         <div className="relative space-y-6 lg:ml-44">
-          {experience.map((item, index) => (
+          {allExperience.map((item, index) => (
             <CircuitStop
               key={item.id}
               item={item}
               index={index}
               scrollYProgress={scrollYProgress}
-              total={experience.length}
+              total={allExperience.length}
               isOpen={expandedId === item.id}
               onToggle={() => setExpandedId(expandedId === item.id ? null : item.id)}
             />

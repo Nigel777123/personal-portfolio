@@ -1,5 +1,7 @@
 import type { ExperienceItem } from '../types'
 
+export const EXPERIENCE_KEY = 'admin_experience'
+
 export const experience: ExperienceItem[] = [
   {
     id: '1',
@@ -41,3 +43,13 @@ export const experience: ExperienceItem[] = [
     ],
   },
 ]
+
+export function getExperience(): ExperienceItem[] {
+  try {
+    const raw = localStorage.getItem(EXPERIENCE_KEY)
+    if (raw) return JSON.parse(raw) as ExperienceItem[]
+  } catch {
+    // ignore
+  }
+  return experience
+}

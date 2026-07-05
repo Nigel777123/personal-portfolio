@@ -1,5 +1,7 @@
 import type { Project, ProjectCategory } from '../types'
 
+export const PROJECTS_KEY = 'admin_projects'
+
 export const projectFilters: { label: string; value: ProjectCategory }[] = [
   { label: 'All', value: 'all' },
   { label: 'Web', value: 'web' },
@@ -57,3 +59,13 @@ export const projects: Project[] = [
     performance: 98,
   },
 ]
+
+export function getProjects(): Project[] {
+  try {
+    const raw = localStorage.getItem(PROJECTS_KEY)
+    if (raw) return JSON.parse(raw) as Project[]
+  } catch {
+    // ignore
+  }
+  return projects
+}
